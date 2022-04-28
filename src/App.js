@@ -31,6 +31,7 @@ function App() {
   )
 
   const parsed = useComputedState(() => pr && decode(pr), [pr])
+  const [fixedAt, fix] = useState(null)
   const [info, setInfo] = useState(null)
 
   return (
@@ -42,13 +43,23 @@ function App() {
       <Textarea value={pr} onChange={ev => setPR(ev.target.value)} />
       {parsed && (
         <Row>
-          <PaymentRequest>
+          <PaymentRequest isFixed={!!fixedAt}>
             {parsed.sections.map(section => (
               <Section
                 key={section.letters}
                 name={section.name}
-                onMouseEnter={() => setInfo(section)}
-                onMouseLeave={() => setInfo(null)}
+                onMouseEnter={() => fixedAt === null ? setInfo(section) : null }
+                onMouseLeave={() => fixedAt === null ? setInfo(null) : null }
+                onClick={() => {
+                  if (fixedAt === section) {
+                    fix(null)
+                  } else {
+                    fix(section)
+                    setInfo(section)
+                  }
+                }}
+                isAnyFixed={!!fixedAt}
+                isFixed={fixedAt === section}
               >
                 {section.tag ? (
                   <>

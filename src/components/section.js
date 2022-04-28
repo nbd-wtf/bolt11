@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-import { getTagColor } from '../utils/colors'
+import { getTagColor, withOpacity } from '../utils/colors'
 
 export const Section = styled.span`
   font-family: monospace;
@@ -13,18 +13,29 @@ export const Section = styled.span`
   cursor: pointer;
 
   ${props =>
-    css`
-      background-color: ${getTagColor(props.name)
-        .replace('rgb', 'rgba')
-        .replace(')', ', 0.5)')};
-    `}
+    props.isAnyFixed ? css`
+      background-color: ${withOpacity(getTagColor(props.name), 0.2)};
+    ` : css`
+      background-color: ${withOpacity(getTagColor(props.name), 0.6)};
+    `
+  }
 
   &:hover {
-    color: white;
-
     ${props =>
-      css`
+      props.isFixed
+        ? null
+      : props.isAnyFixed ? css`
+        background-color: ${withOpacity(getTagColor(props.name), 0.3)};
+        filter: brightness(1.45);
+      ` : css`
         background-color: ${getTagColor(props.name)};
-      `}
+      `
+    }
+  }
+
+  ${props =>
+    props.isFixed ? css`
+      background-color: ${getTagColor(props.name)};
+    ` : null
   }
 `
