@@ -5,7 +5,9 @@ import { getTagColor } from '../utils/colors'
 export const Section = styled.span`
   font-family: monospace;
   letter-spacing: 1px;
-  line-height: 36px;
+  line-height: 37px;
+  padding: 5px 0;
+  border-radius: 1px;
   font-size: 22px;
   color: #fff;
   cursor: pointer;
