@@ -75,7 +75,7 @@ function App() {
                 )}
                 {info.value && (
                   <InfoSectionTitleWrapper>
-                    <InfoSectionTitle>Tag:</InfoSectionTitle>
+                    <InfoSectionTitle>Data:</InfoSectionTitle>
                     <InfoSectionData>{JSON.stringify(info.value, null, 4)}</InfoSectionData>
                   </InfoSectionTitleWrapper>
                 )}
