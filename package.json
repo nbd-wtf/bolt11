@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "buffer": "^6.0.3",
-    "light-bolt11-decoder": "^2.0.0",
+    "light-bolt11-decoder": "^2.1.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-qr-code": "^2.0.7",

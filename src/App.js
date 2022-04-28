@@ -2,6 +2,7 @@
 import useComputedState from 'use-computed-state'
 import { decode } from 'light-bolt11-decoder'
 import React, { useState } from 'react'
+import { Buffer } from 'buffer'
 
 // Local Imports
 import { InputDescription } from './components/input-description'
@@ -76,7 +77,7 @@ function App() {
                 {info.value && (
                   <InfoSectionTitleWrapper>
                     <InfoSectionTitle>Data:</InfoSectionTitle>
-                    <InfoSectionData>{JSON.stringify(info.value, null, 4)}</InfoSectionData>
+                    <InfoSectionData>{Buffer.isBuffer(info.value) ? info.value.toString('hex') : JSON.stringify(info.value, null, 4)}</InfoSectionData>
                   </InfoSectionTitleWrapper>
                 )}
               </Info>
