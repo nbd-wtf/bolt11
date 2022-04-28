@@ -1,14 +1,9 @@
-import styled, { css } from 'styled-components'
-
-import { getTagColor } from '../utils/colors'
+import styled from 'styled-components'
 
 export const Info = styled.div`
-  margin: 8px;
-  padding: 8px;
+  padding: 10px 10px;
   color: white;
-
-  ${props =>
-    css`
-      background-color: ${getTagColor(props.name)};
-    `}
+  margin-top: 20px;
+  border-radius: 8px;
 `
+

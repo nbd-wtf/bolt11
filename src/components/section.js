@@ -14,7 +14,7 @@ export const Section = styled.span`
     css`
       background-color: ${getTagColor(props.name)
         .replace('rgb', 'rgba')
-        .replace(')', ', 0.3)')};
+        .replace(')', ', 0.5)')};
     `}
 
   &:hover {

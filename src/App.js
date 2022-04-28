@@ -7,12 +7,21 @@ import React, { useState } from 'react'
 import { InputDescription } from './components/input-description'
 import { PaymentRequest } from './components/payment-request'
 import { MainContainer } from './components/main-container'
+import { InfoWrapper } from './components/info-wrapper'
+import { HoverText } from './components/hover-text'
+import { Resources } from './components/resources'
 import { Textarea } from './components/textarea'
 import { Section } from './components/section'
+import { Footer } from './components/footer'
 import { Title } from './components/title'
 import { Info } from './components/info'
 import { Row } from './components/row'
 import { Tag } from './components/tag'
+import {
+  InfoSectionData,
+  InfoSectionTitle,
+  InfoSectionTitleWrapper,
+} from './components/section-title'
 
 function App() {
   const [pr, setPR] = useState(
@@ -51,15 +60,26 @@ function App() {
               </Section>
             ))}
           </PaymentRequest>
-          {info && (
-            <Info name={info.name}>
-              <div>{info.name}</div>
-              {info.tag && <div>tag: {info.tag}</div>}
-              {info.value && <div>value: {JSON.stringify(info.value)}</div>}
-            </Info>
-          )}
+          <InfoWrapper name={info ? info.name : null}>
+            {info ? (
+              <Info>
+                <InfoSectionTitleWrapper>
+                  <InfoSectionTitle>Section:</InfoSectionTitle>
+                  <InfoSectionData>{info.name}</InfoSectionData>
+                </InfoSectionTitleWrapper>
+                {info.tag && <div>tag: {info.tag}</div>}
+                {info.value && <div>value: {JSON.stringify(info.value)}</div>}
+              </Info>
+            ) : (
+              <HoverText>
+                Hover over a section above to see more information.
+              </HoverText>
+            )}
+          </InfoWrapper>
+          <Resources />
         </Row>
       )}
+      <Footer />
     </MainContainer>
   )
 }
