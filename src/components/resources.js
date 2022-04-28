@@ -29,7 +29,9 @@ export const ResourcesInnerWrapper = styled.div`
 
 export const Resource = styled.div``
 
-export const ResourceTitle = styled.div``
+export const ResourceTitle = styled.div`
+    color: #E2DBFD;
+`
 
 export const ResourceDescription = styled.div``
 
@@ -40,9 +42,18 @@ export const ResourceButton = styled.a`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 10px 12px;
+    padding: 12px 10px;
     border-radius: 8px;
     margin-top: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: #285a75;
+        transition: all 0.2s ease-in-out;
+    }
 `
 
 export const Resources = () => (

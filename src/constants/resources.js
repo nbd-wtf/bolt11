@@ -22,9 +22,9 @@ export const RESOURCES = [
     },
     {
         id: 4,
-        title: 'BOLTs Spec',
-        description: 'Learn more about the Lightning Network core protocol',
-        url: '',
+        title: 'Lightning Decoder',
+        description: 'Decode Ligthtning Network requests (BOLT11, LNURL, and Lightning Address)',
+        url: 'https://lightningdecoder.com',
         buttonText: 'read more',
     },
     {
@@ -36,9 +36,9 @@ export const RESOURCES = [
     },
     {
         id: 6,
-        title: 'Lightning Address',
-        description: 'Send and receive Lightning payments using an internet identifier',
-        url: 'https://lightningaddress.com',
+        title: 'Awesome LNURL',
+        description: 'A curated collection of awesome things built with LNURL capabilities.',
+        url: 'https://github.com/fiatjaf/awesome-lnurl',
         buttonText: 'read more',
     },
 ]
