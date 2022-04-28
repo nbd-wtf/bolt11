@@ -14,8 +14,7 @@
   },
 
   "plugins": [
-    "react",
-    "babel"
+    "react"
   ],
 
   "globals": {

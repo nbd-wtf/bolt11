@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-import { getTagColor } from '../utils/colors';
+import { getTagColor } from '../utils/colors'
 
 export const Info = styled.div`
   margin: 8px;
