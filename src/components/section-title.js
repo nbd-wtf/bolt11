@@ -8,6 +8,7 @@ export const InfoSectionData = styled.p`
     line-height: 1.5;
     margin: 0;
     word-break: break-all;
+    white-space: pre-wrap;
 `
 
 export const InfoSectionTitle = styled.p`
