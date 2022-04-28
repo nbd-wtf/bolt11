@@ -6,7 +6,7 @@ export const InnerWrapper = styled.div`
     flex-direction: column;
     border-radius: 8px;
     padding: 40px 30px;
-    max-width: 1000px;
+    max-width: 800px;
 `
 
 export const Container = styled.div`

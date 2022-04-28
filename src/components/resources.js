@@ -3,25 +3,25 @@ import styled from 'styled-components'
 import { RESOURCES } from '../constants/resources'
 
 export const ResourcesWrapper = styled.div`
-        margin: 30px 0;
+    margin: 50px 0 30px 0;
 `
 
 export const ResourcesTitle = styled.div`
     color: #fff;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 600;
 `
 
 export const ResourcesDescription = styled.div`
-    color: #fff;
-    padding-top: 10px;
+    color: #A58AF9;
+    padding-top: 6px;
     font-size: 14px;
 `
 
 export const ResourcesInnerWrapper = styled.div`
     display: grid;
-    margin-top: 20px;
-    grid-row-gap: 20px;
+    margin-top: 40px;
+    grid-row-gap: 50px;
     grid-column-gap: 20px;
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: repeat(3, 1fr);
@@ -30,10 +30,19 @@ export const ResourcesInnerWrapper = styled.div`
 export const Resource = styled.div``
 
 export const ResourceTitle = styled.div`
-    color: #E2DBFD;
+    color: #D2DAEA;
+    font-size: 18px;
+    font-weight: 600;
+    padding-bottom: 4px;
 `
 
-export const ResourceDescription = styled.div``
+export const ResourceDescription = styled.div`
+    color: #858692;
+    font-size: 14px;
+    font-weight: 400;
+    padding-bottom: 8px;
+    line-height: 1.5;
+`
 
 export const ResourceButton = styled.a`
     display: flex;

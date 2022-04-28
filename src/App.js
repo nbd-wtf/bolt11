@@ -67,12 +67,22 @@ function App() {
                   <InfoSectionTitle>Section:</InfoSectionTitle>
                   <InfoSectionData>{info.name}</InfoSectionData>
                 </InfoSectionTitleWrapper>
-                {info.tag && <div>tag: {info.tag}</div>}
-                {info.value && <div>value: {JSON.stringify(info.value)}</div>}
+                {info.tag && (
+                  <InfoSectionTitleWrapper>
+                    <InfoSectionTitle>Tag:</InfoSectionTitle>
+                    <InfoSectionData>{info.tag}</InfoSectionData>
+                  </InfoSectionTitleWrapper>
+                )}
+                {info.value && (
+                  <InfoSectionTitleWrapper>
+                    <InfoSectionTitle>Tag:</InfoSectionTitle>
+                    <InfoSectionData>{JSON.stringify(info.value, null, 4)}</InfoSectionData>
+                  </InfoSectionTitleWrapper>
+                )}
               </Info>
             ) : (
               <HoverText>
-                Hover over a section above to see more information.
+                Hover over a highlighted section above to see more information.
               </HoverText>
             )}
           </InfoWrapper>
