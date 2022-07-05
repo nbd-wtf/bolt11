@@ -14,6 +14,7 @@ import { Resources } from './components/resources'
 import { Textarea } from './components/textarea'
 import { Section } from './components/section'
 import { Footer } from './components/footer'
+import { Intro } from './components/intro'
 import { Title } from './components/title'
 import { Info } from './components/info'
 import { Row } from './components/row'
@@ -37,8 +38,10 @@ function App() {
   return (
     <MainContainer>
       <Title />
+      <Intro />
+
       <InputDescription>
-        Enter a BOLT11 Lightning Network invoice below:
+        Anatomy of a Lightning invoice:
       </InputDescription>
       <Textarea value={pr} onChange={ev => setPR(ev.target.value)} />
       {parsed && (
