@@ -29,7 +29,7 @@ export const Title = () => (
         <TitleText>The Lightning Invoice</TitleText>
         <DescriptionWrapper>
             <DescriptionText>
-                Learn the inner workings of BOLT11 Lightning Network invoices.
+                Learn the inner workings of BOLT11, the Lightning Network invoice standard.
             </DescriptionText>
         </DescriptionWrapper>
     </TitleWrapper>
