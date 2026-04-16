@@ -1,10 +1,5 @@
-// Core Lib Imports
-import useComputedState from 'use-computed-state'
-import { decode } from 'light-bolt11-decoder'
-import React, { useState } from 'react'
-import { Buffer } from 'buffer'
+import React, { useEffect, useMemo, useState } from 'react'
 
-// Local Imports
 import { InputDescription } from './components/input-description'
 import { PaymentRequest } from './components/payment-request'
 import { MainContainer } from './components/main-container'
@@ -23,38 +18,151 @@ import {
   InfoSectionTitle,
   InfoSectionTitleWrapper,
 } from './components/section-title'
+import {
+  fetchLnurlJson,
+  formatDisplayValue,
+  interpretInput,
+  toInfoEntries,
+} from './utils/invoice-input'
+
+const DEFAULT_INPUT =
+  'lnbc15u1p3xnhl2pp5jptserfk3zk4qy42tlucycrfwxhydvlemu9pqr93tuzlv9cc7g3sdqsvfhkcap3xyhx7un8cqzpgxqzjcsp5f8c52y2stc300gl6s4xswtjpc37hrnnr3c9wvtgjfuvqmpm35evq9qyyssqy4lgd8tj637qcjp05rdpxxykjenthxftej7a2zzmwrmrl70fyj9hvj0rewhzj7jfyuwkwcg9g2jpwtk3wkjtwnkdks84hsnu8xps5vsq4gj5hs'
+
+function renderInfoRows(entries) {
+  return entries
+    .filter(entry => entry.value)
+    .map(entry => (
+      <InfoSectionTitleWrapper key={entry.label}>
+        <InfoSectionTitle>{entry.label}:</InfoSectionTitle>
+        <InfoSectionData>{entry.value}</InfoSectionData>
+      </InfoSectionTitleWrapper>
+    ))
+}
 
 function App() {
-  const [pr, setPR] = useState(
-    'lnbc15u1p3xnhl2pp5jptserfk3zk4qy42tlucycrfwxhydvlemu9pqr93tuzlv9cc7g3sdqsvfhkcap3xyhx7un8cqzpgxqzjcsp5f8c52y2stc300gl6s4xswtjpc37hrnnr3c9wvtgjfuvqmpm35evq9qyyssqy4lgd8tj637qcjp05rdpxxykjenthxftej7a2zzmwrmrl70fyj9hvj0rewhzj7jfyuwkwcg9g2jpwtk3wkjtwnkdks84hsnu8xps5vsq4gj5hs'
-    // 'lnbc120n1p39wfrtpp5n24pj26fpl0p9dsyxx47ttklcazd7z87pkmru4geca6n6kz4409qdpzve5kzar2v9nr5gpqw3hjqsrvde68scn0wssp5mqr9mkd94jm5z65x94msas8hqhcuc96tqtre3wqkrm305tcvzgmqxqy9gcqcqzys9qrsgqrzjqtx3k77yrrav9hye7zar2rtqlfkytl094dsp0ms5majzth6gt7ca6uhdkxl983uywgqqqqqqqqqq86qqjqrzjq0h9s36s2kpql0a99c6k4zfq7chcx9sjnsund8damcl96qvc4833tx69gvk26e6efsqqqqlgqqqqpjqqjqrzjqd98kxkpyw0l9tyy8r8q57k7zpy9zjmh6sez752wj6gcumqnj3yxzhdsmg6qq56utgqqqqqqqqqqqeqqjqxahrxthcc8syrjyklsg57mzsqauargyc748lf8s2dezw5x7aww0j5v4k5wz9p5x4ax840h4q0qmgucglkesgzvvc22wwmqc756ec02qp34yg8p'
-  )
-
-  const parsed = useComputedState(() => pr && decode(pr), [pr])
-  const [fixedAt, fix] = useState(null)
+  const [input, setInput] = useState(DEFAULT_INPUT)
+  const [fixedAt, setFixedAt] = useState(null)
   const [info, setInfo] = useState(null)
+  const [resolution, setResolution] = useState({
+    status: 'idle',
+    data: null,
+    error: null,
+    inputType: null,
+    targetUrl: null,
+  })
+
+  const interpreted = useMemo(() => interpretInput(input), [input])
+  const parsed = interpreted.type === 'bolt11' ? interpreted.parsed : null
+
+  useEffect(() => {
+    setFixedAt(null)
+    setInfo(null)
+
+    let cancelled = false
+
+    if (interpreted.type !== 'resolve') {
+      setResolution({
+        status: 'idle',
+        data: null,
+        error: null,
+        inputType: null,
+        targetUrl: null,
+      })
+      return () => {
+        cancelled = true
+      }
+    }
+
+    setResolution({
+      status: 'loading',
+      data: null,
+      error: null,
+      inputType: interpreted.inputType,
+      targetUrl: interpreted.targetUrl,
+    })
+
+    fetchLnurlJson(interpreted.targetUrl)
+      .then(data => {
+        if (cancelled) {
+          return
+        }
+
+        setResolution({
+          status: 'success',
+          data,
+          error: null,
+          inputType: interpreted.inputType,
+          targetUrl: interpreted.targetUrl,
+        })
+      })
+      .catch(error => {
+        if (cancelled) {
+          return
+        }
+
+        setResolution({
+          status: 'error',
+          data: null,
+          error: error.message,
+          inputType: interpreted.inputType,
+          targetUrl: interpreted.targetUrl,
+        })
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [interpreted])
+
+  const resolvedEntries = useMemo(() => {
+    if (resolution.status !== 'success') {
+      return []
+    }
+
+    return toInfoEntries(resolution.data, [
+      { label: 'resolution type', value: resolution.inputType },
+      { label: 'target', value: resolution.targetUrl },
+    ])
+  }, [resolution])
+
+  const resolutionErrorEntries = useMemo(() => {
+    if (resolution.status !== 'error') {
+      return []
+    }
+
+    return [
+      { label: 'resolution type', value: resolution.inputType },
+      { label: 'target', value: resolution.targetUrl },
+      { label: 'error', value: resolution.error },
+    ]
+  }, [resolution])
 
   return (
     <MainContainer>
       <Title />
       <InputDescription>
-        Enter a BOLT11 Lightning Network invoice below:
+        Enter a BOLT11 invoice, Lightning Address, or LNURL below:
       </InputDescription>
-      <Textarea value={pr} onChange={ev => setPR(ev.target.value)} />
+      <Textarea
+        aria-label="Invoice, Lightning Address, or LNURL"
+        value={input}
+        onChange={event => setInput(event.target.value)}
+      />
+
       {parsed && (
         <Row>
           <PaymentRequest isFixed={!!fixedAt}>
             {parsed.sections.map(section => (
               <Section
-                key={section.letters}
+                key={`${section.name}-${section.letters}`}
                 name={section.name}
-                onMouseEnter={() => fixedAt === null ? setInfo(section) : null }
-                onMouseLeave={() => fixedAt === null ? setInfo(null) : null }
+                onMouseEnter={() => (fixedAt === null ? setInfo(section) : null)}
+                onMouseLeave={() => (fixedAt === null ? setInfo(null) : null)}
                 onClick={() => {
                   if (fixedAt === section) {
-                    fix(null)
+                    setFixedAt(null)
                   } else {
-                    fix(section)
+                    setFixedAt(section)
                     setInfo(section)
                   }
                 }}
@@ -88,7 +196,7 @@ function App() {
                 {info.value && (
                   <InfoSectionTitleWrapper>
                     <InfoSectionTitle>Data:</InfoSectionTitle>
-                    <InfoSectionData>{Buffer.isBuffer(info.value) ? info.value.toString('hex') : JSON.stringify(info.value, null, 4)}</InfoSectionData>
+                    <InfoSectionData>{formatDisplayValue(info.value)}</InfoSectionData>
                   </InfoSectionTitleWrapper>
                 )}
               </Info>
@@ -101,6 +209,36 @@ function App() {
           <Resources />
         </Row>
       )}
+
+      {interpreted.type === 'resolve' && (
+        <Row>
+          <PaymentRequest>{interpreted.normalized}</PaymentRequest>
+          <InfoWrapper name={resolution.status === 'success' ? 'fallback_address' : null}>
+            {resolution.status === 'loading' ? (
+              <HoverText>Resolving payment metadata…</HoverText>
+            ) : resolution.status === 'error' ? (
+              <Info>{renderInfoRows(resolutionErrorEntries)}</Info>
+            ) : (
+              <Info>{renderInfoRows(resolvedEntries)}</Info>
+            )}
+          </InfoWrapper>
+          <Resources />
+        </Row>
+      )}
+
+      {interpreted.type === 'invalid' && (
+        <Row>
+          <InfoWrapper>
+            <Info>
+              <InfoSectionTitleWrapper>
+                <InfoSectionTitle>Error:</InfoSectionTitle>
+                <InfoSectionData>{interpreted.error}</InfoSectionData>
+              </InfoSectionTitleWrapper>
+            </Info>
+          </InfoWrapper>
+        </Row>
+      )}
+
       <Footer />
     </MainContainer>
   )
